@@ -19,14 +19,16 @@ import java.util.List;
 @Component
 public class CommandLineRnner implements CommandLineRunner {
 
+    private String TEBELFROMGITHUB="https://github.com/jkwakman/Open-Cookie-Database/raw/master/open-cookie-database.csv";
+    private String TEBEL="open-cookie-database.csv";
     @Autowired
     private CookieRepo cookieRepo;
 
     @Override
     public void run(String... args) throws Exception {
 
-        String url = "https://github.com/jkwakman/Open-Cookie-Database/raw/master/open-cookie-database.csv";
-        File file = new File("open-cookie-database.csv");
+        String url = TEBELFROMGITHUB;
+        File file = new File(TEBEL);
 
         int spalteIndex1 = 1;
         int spalteIndex2 = 2;

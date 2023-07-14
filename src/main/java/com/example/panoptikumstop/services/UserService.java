@@ -11,6 +11,7 @@ import com.example.panoptikumstop.security.email.Emails;
 import com.example.panoptikumstop.security.token.ConfirmationToken;
 import com.example.panoptikumstop.security.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -42,8 +44,7 @@ public class UserService {
 
 
     public User findByEmail(String email) {
-        Optional<User> oUser = Optional.ofNullable(userRepo.findByEmail(email).orElseThrow(() -> new NoSuchElementException(
-                "Der Benutzer konnte nicht gefunden werden.")));
+        Optional<User> oUser = Optional.ofNullable(userRepo.findByEmail(email).orElseThrow(() -> new NoSuchElementException("Der Benutzer konnte nicht gefunden werden.")));
 
         return oUser.get();
     }
@@ -51,17 +52,15 @@ public class UserService {
     public String signIn(UserDto userDto) {
 
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getEmail(),
-                            userDto.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
 
-            SecurityContextHolder.getContext().setAuthentication(
-                    authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         } catch (BadCredentialsException ex) {
             throw new BadCredentialsException("Falsche Email oder Passwort.");
         }
+
         return "Erfolgreich eingelogt";
 
     }
@@ -70,8 +69,7 @@ public class UserService {
     public User signup(UserDto userDto) {
 
 
-        boolean userExists = userRepo.findByEmail(userDto.getEmail())
-                .isPresent();
+        boolean userExists = userRepo.findByEmail(userDto.getEmail()).isPresent();
 
         if (userExists) {
             throw new UserExistException(EMAIL_IS_TAKEN);
@@ -86,42 +84,28 @@ public class UserService {
                 .build();
 
         userRepo.save(u);
-        emailSender.sendRegistrationEmail(
-                userDto.getEmail(),
-                Emails.buildRegistrationEmail(userDto.getFirstname()));
-
+        emailSender.sendRegistrationEmail(userDto.getEmail(), Emails.buildRegistrationEmail(userDto.getFirstname()));
 
         return u;
     }
 
 
     public void PasswordForget(UserDto userDto) {
-        boolean userExists = userRepo.findByEmail(userDto.getEmail())
-                .isPresent();
+        boolean userExists = userRepo.findByEmail(userDto.getEmail()).isPresent();
 
         if (!userExists) {
             throw new UserExistException(EMAIL_NOT_EXIST);
         }
         User user = findByEmail(userDto.getEmail());
 
-        var token = UUID.randomUUID()
-                .toString();
+        var token = UUID.randomUUID().toString();
 
-        var confirmationToken = new ConfirmationToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-                        .plusMinutes(15),
-                user
-        );
+        var confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
 
-        confirmationTokenService.saveConfirmationToken(
-                confirmationToken);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         var link = String.format("http://localhost:8080/auth/confirm?token=%s&mail=%s", token, userDto.getEmail());
-        emailSender.sendResetPasswordEmail(
-                userDto.getEmail(),
-                Emails.PasswordResetMassage(user.getFirstname(), link));
+        emailSender.sendResetPasswordEmail(userDto.getEmail(), Emails.PasswordResetMassage(user.getFirstname(), link));
 
 
     }
@@ -129,23 +113,17 @@ public class UserService {
 
     public void PasswordReset(UserDto userDto) {
         User user = findByEmail(userDto.getEmail());
-        user.setPassword(bCryptPasswordEncoder
-                .encode(userDto.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userRepo.save(user);
 
 
-        emailSender.InfoEmail(
-                user.getEmail(),
-                Emails.InfoEmail(user.getFirstname()));
+        emailSender.InfoEmail(user.getEmail(), Emails.InfoEmail(user.getFirstname()));
 
     }
 
     @Transactional
     public void confirmToken(String token) {
-        var confirmationToken = confirmationTokenService
-                .getToken(token)
-                .orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+        var confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("token not found"));
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 

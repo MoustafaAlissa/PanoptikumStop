@@ -4,6 +4,7 @@ package com.example.panoptikumstop.services;
 import com.example.panoptikumstop.model.dto.CookieDto;
 import com.example.panoptikumstop.model.entity.Cookie;
 import com.example.panoptikumstop.repo.CookieRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,34 +21,37 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Service
-
-
+@Slf4j
 public class TrackingSearchService {
     @Autowired
     private CookieRepo cookieRepo;
     private String EASYLIST_COOKIELIST_URL = "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt";
 
+    private String AND="And";
+    private String TEXT1="Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
+    private String TEXT2="Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
+
     public boolean searchWordInFile(String word) {
 
         boolean found = false;
 
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet request = new HttpGet(EASYLIST_COOKIELIST_URL);
-
         try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpGet request = new HttpGet(EASYLIST_COOKIELIST_URL);
             CloseableHttpResponse response = client.execute(request);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            found = reader.lines().anyMatch(line -> line.equals(word));
+            found = reader.lines().anyMatch(line  -> filerString(line).equals(word));
         } catch (IOException e) {
 
-            System.out.println(e.getMessage());
+           log.error(e.getMessage());
         }
         return found;
     }
@@ -56,12 +60,11 @@ public class TrackingSearchService {
     public Cookie findCookie(String name) {
 
         Cookie cookie = cookieRepo.findByName(name);
-        if (cookie == null) {
+        if (cookie == null && searchWordInFile(name)) {
 
-            if (searchWordInFile(name)) {
                 String c = filerString(name);
                 cookie = add(c);
-            }
+
         }
         return cookie;
     }
@@ -86,21 +89,21 @@ public class TrackingSearchService {
                         .name(name)
                         .category(infoList.get(2))
                         .description(infoList.get(0))
-                        .retentionPeriod(infoList.get(7) + " and " + infoList.get(8))
-                        .description(infoList.get(3) + " and " + infoList.get(6) + " and " + infoList.get(9))
+                        .retentionPeriod(infoList.get(7) +AND + infoList.get(8))
+                        .description(infoList.get(3) +AND +infoList.get(6) +AND + infoList.get(9))
                         .isChecked(false)
                         .build();
             } else {
                 c = Cookie.builder()
                         .name(name)
-                        .description("Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.")
+                        .description(TEXT2)
                         .isChecked(false)
                         .build();
             }
         } catch (Exception e) {
             c = Cookie.builder()
                     .name(name)
-                    .description("Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.")
+                    .description(TEXT1)
                     .isChecked(false)
                     .build();
         }

@@ -41,38 +41,4 @@ public class MyUserDetailsService implements UserDetailsService {
         return new MyUserDetails(oUser.get());
     }
 
-//
-//    public String signUpUser(User user) {
-//        boolean userExists = userRepository
-//                .findByEmail(user.getEmail())
-//                .isPresent();
-//
-//        if (userExists) {
-//            throw new IllegalStateException(EMAIL_IS_TAKEN);
-//        }
-//
-//
-//        String encodedPassword = bCryptPasswordEncoder
-//                .encode(user.getPassword());
-//
-//        user.setPassword(encodedPassword);
-//
-//        userRepository.save(user);
-//        var token = UUID.randomUUID()
-//                .toString();
-//
-//        var confirmationToken = new ConfirmationToken(
-//                token,
-//                LocalDateTime.now(),
-//                LocalDateTime.now()
-//                        .plusMinutes(15),
-//                user
-//        );
-//
-//        confirmationTokenService.saveConfirmationToken(
-//                confirmationToken);
-//        return token;
-//    }
-
-
 }
