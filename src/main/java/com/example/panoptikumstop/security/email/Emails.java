@@ -21,6 +21,7 @@ public class Emails {
                 "<p>PanoptikumStop Team</p>\n" +
                 "<p>&nbsp;</p>\n" +
                 "<p>&nbsp;</p>");
+
     }
 
 

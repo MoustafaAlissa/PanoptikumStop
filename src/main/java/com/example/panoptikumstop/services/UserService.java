@@ -41,6 +41,10 @@ public class UserService {
     private final EmailSender emailSender;
     private static final String EMAIL_IS_TAKEN = "email already taken";
     private static final String EMAIL_NOT_EXIST = "email not exist";
+    private static final String LOGIN_SUCCESSFUL = "Erfolg bei einlogen von ";
+    private static final String PASSWRORD_OR_EMAIL_ERROR = "Password oder Email ist falsch";
+    private static final String URL_PASSWORD_FORGET = "http://localhost:8080/auth/confirm?token=%s&mail=%s";
+    private static final String TOKEN_EXPIRED = "token expired";
 
 
     public User findByEmail(String email) {
@@ -48,24 +52,18 @@ public class UserService {
 
         return oUser.get();
     }
-
-    public String signIn(UserDto userDto) {
+    public void signIn(UserDto userDto) {
 
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            log.info(LOGIN_SUCCESSFUL + userDto.getEmail());
 
         } catch (BadCredentialsException ex) {
-            throw new BadCredentialsException("Falsche Email oder Passwort.");
+            throw new UserExistException(PASSWRORD_OR_EMAIL_ERROR);
         }
-
-        return "Erfolgreich eingelogt";
-
     }
-
-
     public User signup(UserDto userDto) {
 
 
@@ -88,8 +86,6 @@ public class UserService {
 
         return u;
     }
-
-
     public void PasswordForget(UserDto userDto) {
         boolean userExists = userRepo.findByEmail(userDto.getEmail()).isPresent();
 
@@ -104,13 +100,11 @@ public class UserService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        var link = String.format("http://localhost:8080/auth/confirm?token=%s&mail=%s", token, userDto.getEmail());
+        var link = String.format(URL_PASSWORD_FORGET, token, userDto.getEmail());
         emailSender.sendResetPasswordEmail(userDto.getEmail(), Emails.PasswordResetMassage(user.getFirstname(), link));
 
 
     }
-
-
     public void PasswordReset(UserDto userDto) {
         User user = findByEmail(userDto.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
@@ -120,7 +114,6 @@ public class UserService {
         emailSender.InfoEmail(user.getEmail(), Emails.InfoEmail(user.getFirstname()));
 
     }
-
     @Transactional
     public void confirmToken(String token) {
         var confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("token not found"));
@@ -128,9 +121,23 @@ public class UserService {
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException("token expired");
+            throw new TokenExpiredException(TOKEN_EXPIRED);
         }
 
     }
 
+    public String addAdmin( String email){
+        User u= findByEmail(email);
+        u.setRole("ADMIN");
+        userRepo.save(u);
+        return u.getFirstname() +" "+u.getLastname()+" ";
+    }
+
+    public String removeAdmin( String email){
+        User u= findByEmail(email);
+        u.setRole("USER");
+        userRepo.save(u);
+
+        return u.getFirstname() +" "+u.getLastname();
+    }
 }

@@ -120,9 +120,9 @@ public class TrackingSearchService {
 
     public Cookie createCookie(CookieDto cookie) {
         Cookie c = Cookie.builder()
-                .name(cookie.getName())
                 .dataController(cookie.getDataController())
                 .domain(cookie.getDomain())
+                .name(cookie.getName())
                 .category(cookie.getCategory())
                 .description(cookie.getDescription())
                 .platform(cookie.getPlatform())

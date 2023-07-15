@@ -16,7 +16,7 @@ public class GlobalException {
         return new ResponseEntity<>(responseException, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ResponseException> handleTokenExpiredException(TokenExpiredException e) {
+    public ResponseEntity<ResponseException> TokenExpiredException(TokenExpiredException e) {
         ResponseException responseException = new ResponseException("TokenExpiredException", e.getMessage());
         return new ResponseEntity<>(responseException, HttpStatus.BAD_REQUEST);
     }

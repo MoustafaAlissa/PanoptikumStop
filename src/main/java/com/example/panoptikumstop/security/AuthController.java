@@ -7,6 +7,7 @@ package com.example.panoptikumstop.security;
 
 import com.example.panoptikumstop.model.dto.UserDto;
 import com.example.panoptikumstop.services.UserService;
+import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,16 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
-
-
     @PostMapping("/signin")
     public ResponseEntity<String> authenticateUser(@RequestBody UserDto userDto) throws BadCredentialsException {
 
         userService.signIn(userDto);
-        System.out.println("Welcme ");
         return new ResponseEntity<>("Benutzer erfolgreich eingeloggt.", HttpStatus.OK);
 
     }
