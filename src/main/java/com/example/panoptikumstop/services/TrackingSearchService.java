@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,7 @@ public class TrackingSearchService {
     }
 
 
+
     public Cookie findCookie(String name) {
 
         Cookie cookie = cookieRepo.findByName(name);
@@ -67,6 +70,10 @@ public class TrackingSearchService {
 
         }
         return cookie;
+    }
+
+    public List<Cookie> findCookie(String [] list) {
+        return Arrays.stream(list).map(this::findCookie).collect(Collectors.toList());
     }
 
     public Cookie add(String name) {

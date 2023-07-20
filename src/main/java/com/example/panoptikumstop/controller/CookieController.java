@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 @RestController
 @RequestMapping("/cookie")
 public class CookieController {
@@ -20,6 +22,12 @@ public class CookieController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<?> findCookie(@RequestParam("name") String name) {
         return ResponseEntity.ok(trackingSearchService.findCookie(name));
+    }
+    @PostMapping("/findAll")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseEntity<?> findCookie(@RequestBody String [] list) {
+
+        return ResponseEntity.ok(trackingSearchService.findCookie(list));
     }
 
     @GetMapping("/delete")

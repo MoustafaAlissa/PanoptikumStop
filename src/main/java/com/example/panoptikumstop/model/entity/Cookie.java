@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Table(name = "\"cookies\"")
-public class Cookie extends BaseEntity {
+public class Cookie extends BaseEntity  implements Serializable {
     private String platform;
     private String category;
     private String name;

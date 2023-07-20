@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Data
@@ -20,7 +21,7 @@ import java.util.Collection;
 @Builder
 @Entity
 @Table(name = "\"users\"")
-public class User extends BaseEntity  {
+public class User extends BaseEntity   implements Serializable {
 
     private String firstname;
     private String lastname;
