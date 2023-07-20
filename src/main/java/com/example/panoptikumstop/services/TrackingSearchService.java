@@ -71,7 +71,7 @@ public class TrackingSearchService {
     }
 
     public List<Cookie> findCookieList(String  list) {
-        String[] parts = list.substring(1, list.length() - 1).split(";");
+        String[] parts = list.substring(list.indexOf("{") + 1, list.indexOf("}")).split(";");
         return Arrays.stream(parts).map(this::findCookie).collect(Collectors.toList());
     }
 
