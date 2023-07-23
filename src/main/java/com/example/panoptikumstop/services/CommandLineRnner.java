@@ -51,7 +51,7 @@ public class CommandLineRnner implements CommandLineRunner {
                         .name(row[spalteIndex3])
                         .domain(row[spalteIndex4])
                         .description(row[spalteIndex5])
-                        .retentionPeriod(row[spalteIndex6])
+                        .time(row[spalteIndex6])
                         .dataController(row[spalteIndex7])
                         .isChecked(true)
                         .build();

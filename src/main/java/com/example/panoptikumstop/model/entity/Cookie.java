@@ -24,7 +24,7 @@ public class Cookie extends BaseEntity  implements Serializable {
     private String domain;
     @Column(length = 10000)
     private String description;
-    private String retentionPeriod;
+    private String time;
     @Column(length = 10000)
     private String dataController;
     private boolean isChecked;

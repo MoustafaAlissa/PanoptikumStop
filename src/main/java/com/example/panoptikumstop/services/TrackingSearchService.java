@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,7 +47,7 @@ public class TrackingSearchService {
             CloseableHttpResponse response = client.execute(request);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            found = reader.lines().anyMatch(line  -> filerString(line).equals(word));
+            found = reader.lines().anyMatch(line  -> (line).equals(word));
         } catch (IOException e) {
 
            log.error(e.getMessage());
@@ -95,7 +94,7 @@ public class TrackingSearchService {
                         .name(name)
                         .category(infoList.get(2))
                         .description(infoList.get(0))
-                        .retentionPeriod(infoList.get(7) +AND + infoList.get(8))
+                        .time(infoList.get(7) +AND + infoList.get(8))
                         .description(infoList.get(3) +AND +infoList.get(6) +AND + infoList.get(9))
                         .isChecked(false)
                         .build();
@@ -132,7 +131,7 @@ public class TrackingSearchService {
                 .category(cookie.getCategory())
                 .description(cookie.getDescription())
                 .platform(cookie.getPlatform())
-                .retentionPeriod(cookie.getRetentionPeriod())
+                .time(cookie.getRetentionPeriod())
                 .build();
         cookieRepo.save(c);
 
@@ -149,7 +148,7 @@ public class TrackingSearchService {
                     .category(cookie.getCategory())
                     .description(cookie.getDescription())
                     .platform(cookie.getPlatform())
-                    .retentionPeriod(cookie.getRetentionPeriod())
+                    .time(cookie.getRetentionPeriod())
                     .isChecked(cookie.isChecked())
                     .build();
             cookieRepo.save(c);
