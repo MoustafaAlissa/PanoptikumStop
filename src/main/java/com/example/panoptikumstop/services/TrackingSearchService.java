@@ -17,12 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -33,9 +35,9 @@ public class TrackingSearchService {
     private CookieRepo cookieRepo;
     private String EASYLIST_COOKIELIST_URL = "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt";
 
-    private String AND="And";
-    private String TEXT1="Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
-    private String TEXT2="Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
+    private String AND = "And";
+    private String TEXT1 = "Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
+    private String TEXT2 = "Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
 
     public boolean searchWordInFile(String word) {
 
@@ -47,14 +49,13 @@ public class TrackingSearchService {
             CloseableHttpResponse response = client.execute(request);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            found = reader.lines().anyMatch(line  -> (line).equals(word));
+            found = reader.lines().anyMatch(line -> (line).equals(word));
         } catch (IOException e) {
 
-           log.error(e.getMessage());
+            log.error(e.getMessage());
         }
         return found;
     }
-
 
 
     public Cookie findCookie(String name) {
@@ -62,16 +63,20 @@ public class TrackingSearchService {
         Cookie cookie = cookieRepo.findByName(name);
         if (cookie == null && searchWordInFile(name)) {
 
-                String c = filerString(name);
-                cookie = add(c);
+            String c = filerString(name);
+            cookie = add(c);
 
         }
         return cookie;
     }
 
-    public List<Cookie> findCookieList(String  list) {
-        String[] parts = list.substring(list.indexOf("{") + 1, list.indexOf("}")).split(";");
-        return Arrays.stream(parts).map(this::findCookie).collect(Collectors.toList());
+    public List<Cookie> findCookieList(String list) {
+        String[] parts = list.split("(; )");
+        System.out.println(list);
+        return Arrays.stream(parts).
+                map(part -> part.replace("\"", "")).
+                map(this::findCookie).filter(Objects::nonNull).
+                collect(Collectors.toList());
     }
 
     public Cookie add(String name) {
@@ -94,8 +99,8 @@ public class TrackingSearchService {
                         .name(name)
                         .category(infoList.get(2))
                         .description(infoList.get(0))
-                        .time(infoList.get(7) +AND + infoList.get(8))
-                        .description(infoList.get(3) +AND +infoList.get(6) +AND + infoList.get(9))
+                        .time(infoList.get(7) + AND + infoList.get(8))
+                        .description(infoList.get(3) + AND + infoList.get(6) + AND + infoList.get(9))
                         .isChecked(false)
                         .build();
             } else {

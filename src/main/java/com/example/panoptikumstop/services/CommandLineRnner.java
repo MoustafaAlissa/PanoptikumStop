@@ -19,8 +19,8 @@ import java.util.List;
 @Component
 public class CommandLineRnner implements CommandLineRunner {
 
-    private String TEBELFROMGITHUB="https://github.com/jkwakman/Open-Cookie-Database/raw/master/open-cookie-database.csv";
-    private String TEBEL="open-cookie-database.csv";
+    private String TEBELFROMGITHUB = "https://github.com/jkwakman/Open-Cookie-Database/raw/master/open-cookie-database.csv";
+    private String TEBEL = "open-cookie-database.csv";
     @Autowired
     private CookieRepo cookieRepo;
 

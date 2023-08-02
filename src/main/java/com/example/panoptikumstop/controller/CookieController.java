@@ -1,7 +1,6 @@
 package com.example.panoptikumstop.controller;
 
 import com.example.panoptikumstop.model.dto.CookieDto;
-import com.example.panoptikumstop.security.MyUserDetails;
 import com.example.panoptikumstop.services.TrackingSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,10 @@ public class CookieController {
     public ResponseEntity<?> findCookie(@RequestParam("name") String name) {
         return ResponseEntity.ok(trackingSearchService.findCookie(name));
     }
+
     @PostMapping("/findAll")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public ResponseEntity<?> findCookieList(@RequestBody String  list) {
+    public ResponseEntity<?> findCookieList(@RequestBody String list) {
 
         return ResponseEntity.ok(trackingSearchService.findCookieList(list));
     }
@@ -56,9 +56,6 @@ public class CookieController {
 
     }
 
-    private MyUserDetails getCurrentUserDetails(Authentication auth) {
-        return (MyUserDetails) auth.getPrincipal();
-    }
 }
 
 

@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Builder
 @Entity
 @Table(name = "\"users\"")
-public class User extends BaseEntity   implements Serializable {
+public class User extends BaseEntity implements Serializable {
 
     private String firstname;
     private String lastname;
@@ -27,5 +27,5 @@ public class User extends BaseEntity   implements Serializable {
 
     private String email;
     private String password;
-    private String role ;
+    private String role;
 }

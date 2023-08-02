@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Builder
 @Entity
 @Table(name = "\"cookies\"")
-public class Cookie extends BaseEntity  implements Serializable {
+public class Cookie extends BaseEntity implements Serializable {
     private String platform;
     private String category;
     private String name;

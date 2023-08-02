@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     private PauseInterceptor pauseInterceptor;
 
     @Override
-    public void addInterceptors( InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(pauseInterceptor);
     }
 }

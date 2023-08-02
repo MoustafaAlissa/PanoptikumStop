@@ -15,7 +15,7 @@ public class UserDto {
     private String email;
     private String password;
     private String firstname;
-    private  String lastname;
+    private String lastname;
 
     public UserDto(String email, String password) {
         this.email = email;

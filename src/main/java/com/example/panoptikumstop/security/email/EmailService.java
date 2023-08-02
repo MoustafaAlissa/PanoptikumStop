@@ -17,8 +17,8 @@ public class EmailService implements EmailSender {
 
     private static final String FAILED_TO_SEND_EMAIL = "failed to send email";
 
-    private static final String UTF_8="utf-8";
-    private static final String EMAIL="mdic.sys@gmail.com";
+    private static final String UTF_8 = "utf-8";
+    private static final String EMAIL = "mdic.sys@gmail.com";
     private final JavaMailSender mailSender;
 
 
