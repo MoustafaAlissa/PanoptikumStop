@@ -14,6 +14,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +42,7 @@ public class AuthController {
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
-    @RequestMapping(path="/passwordforget",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/passwordforget", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> passwordforget(@RequestBody UserDto userDto) throws ConstraintViolationException {
         userService.PasswordForget(userDto);
         return ResponseEntity.ok(String.format("Email wurde gesendet an %s.", userDto.getEmail()));
@@ -73,12 +74,13 @@ public class AuthController {
             return "Exception";
         }
     }
+
     @GetMapping("/verify/{token}")
     public ResponseEntity<?> verifyToken(@PathVariable("token") String token) {
 
-        if(userService.isActive(token)){
+        if (userService.isActive(token)) {
             return ResponseEntity.ok(userService.isActive(token));
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userService.isActive(token));
         }
 

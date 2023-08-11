@@ -51,9 +51,7 @@ public class CookieController {
     @GetMapping("/uncheckedList")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity getUncheckedList() {
-
         return ResponseEntity.ok(trackingSearchService.getUncheckedList());
-
     }
 
 }

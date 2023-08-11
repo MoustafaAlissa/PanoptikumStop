@@ -1,4 +1,4 @@
 package com.example.panoptikumstop.model.dto;
 
-public record AuthResponse(String token, String name, String role) {
+public record AuthResponse(String token, boolean datenSpenden, String role) {
 }

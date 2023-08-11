@@ -28,4 +28,5 @@ public class User extends BaseEntity implements Serializable {
     private String email;
     private String password;
     private String role;
+    private boolean datenSpenden;
 }

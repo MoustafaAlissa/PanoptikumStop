@@ -17,7 +17,6 @@ import com.example.panoptikumstop.security.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,7 +75,7 @@ public class UserService {
         String token = jwtUtils.generateJwtToken(user.getEmail());
         String role = user.getRole();
 
-        return new AuthResponse(token, user.getFirstname(), role);
+        return new AuthResponse(token,user.isDatenSpenden(), role);
     }
 
     public AuthResponse signup(UserDto userDto) {
@@ -94,6 +92,7 @@ public class UserService {
                 .lastname(userDto.getLastname())
                 .firstname(userDto.getFirstname())
                 .role("USER")
+                .datenSpenden(false)
                 .build();
 
         userRepo.save(u);
@@ -101,7 +100,7 @@ public class UserService {
         String token = jwtUtils.generateJwtToken(u.getEmail());
         emailSender.sendRegistrationEmail(userDto.getEmail(), Emails.buildRegistrationEmail(userDto.getFirstname()));
 
-        return new AuthResponse(token, u.getFirstname(), u.getRole());
+        return new AuthResponse(token, u.isDatenSpenden(), u.getRole());
     }
 
     public void PasswordForget(UserDto userDto) {
@@ -162,7 +161,17 @@ public class UserService {
     }
 
     public boolean isActive(String token) {
-    return jwtUtils.validateJwtToken(token);
+        return jwtUtils.validateJwtToken(token);
 
+    }
+
+    public String getEmail( String token){
+
+       return jwtUtils.getUsernameFromJwtToken(token);
+    }
+    public void spenden(String email){
+        User a=findByEmail(email);
+        a.setDatenSpenden(true);
+        userRepo.save(a);
     }
 }

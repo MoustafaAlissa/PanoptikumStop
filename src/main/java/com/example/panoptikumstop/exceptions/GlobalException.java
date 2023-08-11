@@ -13,7 +13,7 @@ public class GlobalException {
     @ExceptionHandler(UserExistException.class)
     public ResponseEntity UserExistException(UserExistException e) {
         ResponseException responseException = new ResponseException("UserExistException", e.getMessage());
-        return new ResponseEntity<>(responseException, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(responseException, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
