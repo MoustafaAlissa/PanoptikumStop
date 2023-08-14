@@ -53,7 +53,7 @@ public class CommandLineRnner implements CommandLineRunner {
                         .description(row[spalteIndex5])
                         .time(row[spalteIndex6])
                         .dataController(row[spalteIndex7])
-                        .isChecked(true)
+                        .isTrack(false)
                         .build();
                 cookieRepo.save(c);
             }

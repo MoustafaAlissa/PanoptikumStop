@@ -38,7 +38,7 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String pauseApp(@PathVariable long time) throws InterruptedException {
         pauseInterceptor.setPaused(true);
-        Thread.sleep(time);
+        Thread.sleep(( time / (60 * 1000)));
         pauseInterceptor.setPaused(false);
         return "App is now active again";
     }

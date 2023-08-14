@@ -36,8 +36,8 @@ public class TrackingSearchService {
     private String EASYLIST_COOKIELIST_URL = "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt";
 
     private String AND = "And";
-    private String TEXT1 = "Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
-    private String TEXT2 = "Cookies wurden in Easylist gefunden, aber nicht in Cookiepedia.";
+    private String TEXT = "keine Beschreibung, aber Cookies wurden in Easylist gefunden";
+
 
     public boolean searchWordInFile(String word) {
 
@@ -101,20 +101,20 @@ public class TrackingSearchService {
                         .description(infoList.get(0))
                         .time(infoList.get(7) + AND + infoList.get(8))
                         .description(infoList.get(3) + AND + infoList.get(6) + AND + infoList.get(9))
-                        .isChecked(false)
+                        .isTrack(false)
                         .build();
             } else {
                 c = Cookie.builder()
                         .name(name)
-                        .description(TEXT2)
-                        .isChecked(false)
+                        .description(TEXT)
+                        .isTrack(true)
                         .build();
             }
         } catch (Exception e) {
             c = Cookie.builder()
                     .name(name)
-                    .description(TEXT1)
-                    .isChecked(false)
+                    .description(TEXT)
+                    .isTrack(true)
                     .build();
         }
 
@@ -154,7 +154,7 @@ public class TrackingSearchService {
                     .description(cookie.getDescription())
                     .platform(cookie.getPlatform())
                     .time(cookie.getRetentionPeriod())
-                    .isChecked(cookie.isChecked())
+                    .isTrack(cookie.isChecked())
                     .build();
             cookieRepo.save(c);
 
@@ -163,8 +163,8 @@ public class TrackingSearchService {
         return c;
     }
 
-    public List<Cookie> getUncheckedList() {
-        return cookieRepo.findAll().stream().filter(c -> !c.isChecked()).collect(Collectors.toList());
+    public List<Cookie> getTrackingCookies() {
+        return cookieRepo.findAll().stream().filter(c -> !c.isTrack()).collect(Collectors.toList());
 
     }
 
