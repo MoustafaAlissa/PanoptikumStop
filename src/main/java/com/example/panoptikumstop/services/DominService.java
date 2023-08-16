@@ -4,6 +4,7 @@ import com.example.panoptikumstop.model.dto.DominDto;
 import com.example.panoptikumstop.model.entity.Domin;
 import com.example.panoptikumstop.repo.DominRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,13 @@ public class DominService {
     @Autowired
     private DominRepo dominRepo;
 
-    public String filerString(String list) {
-        return Arrays.stream(list.split("; "))
-                .map(word -> word.replace("\"", ""))
-                .collect(Collectors.joining(";"));
-
-    }
-
 
     public void Datenspende(DominDto dominDto) {
 
-        String l = filerString(dominDto.getListOfCookies());
-        Domin d = Domin.builder().ListOfCookies(l).name(dominDto.getUrl()).build();
+        String listOfCookies = dominDto.getListOfCookies();
+        Domin d = Domin.builder().ListOfCookies(String.valueOf(listOfCookies)).name(dominDto.getUrl()).build();
         dominRepo.save(d);
+        System.out.println(d.toString());
 
     }
 

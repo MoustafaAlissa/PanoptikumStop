@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -70,7 +71,9 @@ public class TrackingSearchService {
         return cookie;
     }
 
-    public List<Cookie> findCookieList(String list) {
+    public List<Cookie> findCookieList(String input) {
+        JSONObject jsonObject = new JSONObject(input);
+        String list = jsonObject.getString("list");
         String[] parts = list.split("(; )");
         System.out.println(list);
         return Arrays.stream(parts).
