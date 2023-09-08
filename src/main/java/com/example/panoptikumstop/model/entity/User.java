@@ -2,10 +2,7 @@ package com.example.panoptikumstop.model.entity;
 
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode
 @Table(name = "\"users\"")
 public class User extends BaseEntity implements Serializable {
 

@@ -4,6 +4,7 @@ package com.example.panoptikumstop.services;
 import com.example.panoptikumstop.model.dto.CookieDto;
 import com.example.panoptikumstop.model.entity.Cookie;
 import com.example.panoptikumstop.repo.CookieRepo;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,30 +32,33 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class TrackingSearchService {
     @Autowired
-    private CookieRepo cookieRepo;
-    private String EASYLIST_COOKIELIST_URL = "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt";
+    private final CookieRepo cookieRepo;
+    private final String EASYLIST_COOKIELIST_URL = "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt";
 
-    private String AND = "And";
-    private String TEXT = "keine Beschreibung, aber Cookies wurden in Easylist gefunden";
-
+    private final String AND = "And";
+    private final String TEXT = "keine Beschreibung, aber Cookies wurden in Easylist gefunden";
+    private final String UNKNOWN = "Unknown";
 
     public boolean searchWordInFile(String word) {
 
         boolean found = false;
 
         try {
+            log.info("Suche in Fanboy list gestartet.");
             CloseableHttpClient client = HttpClients.createDefault();
             HttpGet request = new HttpGet(EASYLIST_COOKIELIST_URL);
             CloseableHttpResponse response = client.execute(request);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
             found = reader.lines().anyMatch(line -> (line).equals(word));
+
         } catch (IOException e) {
 
             log.error(e.getMessage());
         }
+        log.info("Ergebnis der Suche ist " + found);
         return found;
     }
 
@@ -62,10 +66,17 @@ public class TrackingSearchService {
     public Cookie findCookie(String name) {
 
         Cookie cookie = cookieRepo.findByName(name);
-        if (cookie == null && searchWordInFile(name)) {
+        if (cookie == null) {
 
-            String c = filerString(name);
-            cookie = add(c);
+
+            if (searchWordInFile(name)) {
+                String c = filerString(name);
+                cookie = addFromEsayList(c);
+            } else {
+                String c = filerString(name);
+                cookie = add(c);
+            }
+
 
         }
         return cookie;
@@ -75,7 +86,7 @@ public class TrackingSearchService {
         JSONObject jsonObject = new JSONObject(input);
         String list = jsonObject.getString("list");
         String[] parts = list.split("(; )");
-        System.out.println(list);
+        log.info(list);
         return Arrays.stream(parts).
                 map(part -> part.replace("\"", "")).
                 map(this::findCookie).filter(Objects::nonNull).
@@ -83,6 +94,43 @@ public class TrackingSearchService {
     }
 
     public Cookie add(String name) {
+        Cookie c = null;
+        String apiUrl = "https://cookiepedia.co.uk/cookies/" + name;
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+            String html = response.getBody();
+            Document document = Jsoup.parse(html);
+            Element contentElement = document.getElementById("content-left");
+            List<String> infoList = new ArrayList<>();
+
+            if (contentElement != null) {
+                Elements elements = contentElement.select("p, strong");
+                elements.stream().map(Element::text).forEach(infoList::add);
+
+                c = Cookie.builder()
+                        .name(name)
+                        .category(infoList.get(2))
+                        .description(infoList.get(0))
+                        .time(infoList.get(13))
+                        .description(infoList.get(3) + AND + infoList.get(6) + AND + infoList.get(9) + AND + infoList.get(14))
+                        .isTrack(false)
+                        .build();
+                cookieRepo.save(c);
+                log.info(c.getName() + " : wurde in DB gespeichert.");
+            }
+        } catch (Exception e) {
+            log.warn(name + ": konnte in cookiepedia nicht gefunden ");
+
+        }
+
+
+        return c;
+    }
+
+
+    public Cookie addFromEsayList(String name) {
         Cookie c;
         String apiUrl = "https://cookiepedia.co.uk/cookies/" + name;
 
@@ -102,10 +150,11 @@ public class TrackingSearchService {
                         .name(name)
                         .category(infoList.get(2))
                         .description(infoList.get(0))
-                        .time(infoList.get(7) + AND + infoList.get(8))
-                        .description(infoList.get(3) + AND + infoList.get(6) + AND + infoList.get(9))
-                        .isTrack(false)
+                        .time(infoList.get(13))
+                        .description(infoList.get(3) + AND + infoList.get(6) + AND + infoList.get(9) + AND + infoList.get(14))
+                        .isTrack(true)
                         .build();
+
             } else {
                 c = Cookie.builder()
                         .name(name)
@@ -122,6 +171,7 @@ public class TrackingSearchService {
         }
 
         cookieRepo.save(c);
+        log.info(c.getName() + " : wurde in DB gespeichert.");
         return c;
     }
 

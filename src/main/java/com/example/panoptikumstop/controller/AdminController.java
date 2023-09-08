@@ -1,17 +1,18 @@
 package com.example.panoptikumstop.controller;
 
 
-import com.example.panoptikumstop.exceptions.TokenExpiredException;
 import com.example.panoptikumstop.services.AdminService;
 import com.example.panoptikumstop.services.UserService;
 import com.example.panoptikumstop.services.config.PauseInterceptor;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
+@Slf4j
 @RequestMapping(path = "/api/Admin")
 
 public class AdminController {
@@ -39,10 +40,10 @@ public class AdminController {
     public String pauseApp(@PathVariable long time) throws InterruptedException {
 
 
-
         pauseInterceptor.setPaused(true);
 
-        Thread.sleep(time*60000);
+        Thread.sleep(time * 60000);
+        log.info("Server wurde pausiert um: " + time + " Minuten");
         pauseInterceptor.setPaused(false);
         return "App is now active again";
     }

@@ -7,12 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CookieRepo extends JpaRepository<Cookie, Long> {
-
-    Optional<Cookie> findCookieByName(String name);
 
     Cookie findByName(String name);
 

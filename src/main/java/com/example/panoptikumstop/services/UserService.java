@@ -75,7 +75,7 @@ public class UserService {
         String token = jwtUtils.generateJwtToken(user.getEmail());
         String role = user.getRole();
 
-        return new AuthResponse(token,user.isDatenSpenden(), role);
+        return new AuthResponse(token, user.isDatenSpenden(), role);
     }
 
     public AuthResponse signup(UserDto userDto) {
@@ -83,6 +83,7 @@ public class UserService {
 
         boolean userExists = userRepo.existsByEmail(userDto.getEmail());
         if (userExists) {
+            log.warn(userDto.getEmail() + " hat versucht neu zu regestrieren.");
             throw new DuplicatedUserInfoException(EMAIL_IS_TAKEN);
         }
 
@@ -96,7 +97,7 @@ public class UserService {
                 .build();
 
         userRepo.save(u);
-
+        log.info(u.getEmail() + " neu angemeldet.");
         String token = jwtUtils.generateJwtToken(u.getEmail());
         emailSender.sendRegistrationEmail(userDto.getEmail(), Emails.buildRegistrationEmail(userDto.getFirstname()));
 
@@ -104,6 +105,7 @@ public class UserService {
     }
 
     public void PasswordForget(UserDto userDto) {
+
         boolean userExists = userRepo.findByEmail(userDto.getEmail()).isPresent();
 
         if (!userExists) {
@@ -119,7 +121,7 @@ public class UserService {
 
         var link = String.format(URL_PASSWORD_FORGET, token, userDto.getEmail());
         emailSender.sendResetPasswordEmail(userDto.getEmail(), Emails.PasswordResetMassage(user.getFirstname(), link));
-
+        log.warn(userDto.getEmail() + "  hat Password vergessen.");
 
     }
 
@@ -128,9 +130,8 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userRepo.save(user);
 
-
         emailSender.InfoEmail(user.getEmail(), Emails.InfoEmail(user.getFirstname()));
-
+        log.info(userDto.getEmail() + " hat neu password");
     }
 
     @Transactional
@@ -165,12 +166,13 @@ public class UserService {
 
     }
 
-    public String getEmail( String token){
+    public String getEmail(String token) {
 
-       return jwtUtils.getUsernameFromJwtToken(token);
+        return jwtUtils.getUsernameFromJwtToken(token);
     }
-    public void spenden(String email){
-        User a=findByEmail(email);
+
+    public void spenden(String email) {
+        User a = findByEmail(email);
         a.setDatenSpenden(true);
         userRepo.save(a);
     }

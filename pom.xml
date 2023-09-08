@@ -146,6 +146,15 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.21.0</version> <!-- Aktualisieren Sie die Version nach Bedarf -->
+            <scope>test</scope>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
