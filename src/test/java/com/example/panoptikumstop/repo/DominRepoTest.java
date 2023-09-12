@@ -1,6 +1,6 @@
 package com.example.panoptikumstop.repo;
 
-import com.example.panoptikumstop.model.entity.Cookie;
+import com.example.panoptikumstop.model.entity.Domin;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,30 +20,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureEmbeddedDatabase
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class CookieRepoTest {
 
-@Autowired
-    private CookieRepo cookieRepo;
-
-
+class DominRepoTest {
+    @Autowired
+    private DominRepo dominRepo;
     @Test
     void findByName() {
-        Cookie cookie= Cookie.builder()
+        Domin domin= Domin.builder()
                 .name("test")
-                .description("test")
-                .category("test")
-                .platform("test")
-                .domain("test")
-                .dataController("test")
-                .isTrack(false)
-                .time("test")
                 .build();
 
-        cookieRepo.save(cookie);
+        dominRepo.save(domin);
 
-        String nema = cookieRepo.findByName("test").getName();
+        String nema = dominRepo.findByName("test").getName();
 
-        assertEquals(cookie.getName(), nema);
+        assertEquals(domin.getName(), nema);
+
+
+
     }
-
 }

@@ -24,14 +24,15 @@ public class DominService {
         String listOfCookies = dominDto.getListOfCookies();
         Domin d = Domin.builder().ListOfCookies(String.valueOf(listOfCookies)).name(filerDomin(dominDto.getUrl())).build();
         dominRepo.save(d);
-        System.out.println(d.toString());
+        log.info(d.toString());
 
     }
 
 
     public Domin findByDomin(String domin) {
         var a = dominRepo.findByName(domin);
-        System.out.println(a.toString());
+
+        log.info(a.toString());
         return a;
 
     }
