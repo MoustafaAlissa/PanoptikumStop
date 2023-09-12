@@ -15,7 +15,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-
+/**
+ * Diese Klasse implementiert das CommandLineRunner-Interface, um beim Starten der Anwendung ausgeführt zu werden.
+ * Sie liest eine CSV-Datei von einer bestimmten URL, verarbeitet die Daten und speichert sie in der Datenbank.
+ */
 @Component
 public class CommandLineRnner implements CommandLineRunner {
 
@@ -23,7 +26,12 @@ public class CommandLineRnner implements CommandLineRunner {
     private String TEBEL = "open-cookie-database.csv";
     @Autowired
     private CookieRepo cookieRepo;
-
+    /**
+     * Die Methode, die beim Starten der Anwendung ausgeführt wird.
+     *
+     * @param args Die Befehlszeilenargumente (nicht verwendet).
+     * @throws Exception Wenn ein Fehler beim Verarbeiten der CSV-Datei auftritt.
+     */
     @Override
     public void run(String... args) throws Exception {
 

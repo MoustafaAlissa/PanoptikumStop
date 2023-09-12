@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.io.Serializable;
-
+/**
+ * Die Klasse Domin repräsentiert ein Objekt, das Informationen über Domin speichert.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

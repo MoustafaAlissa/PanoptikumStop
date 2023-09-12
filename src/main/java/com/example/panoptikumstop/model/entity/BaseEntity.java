@@ -8,7 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
+/**
+ * Die Klasse BaseEntity stellt eine Basic Enitiy, die bei jeder entity existeren soll.
+ */
 @MappedSuperclass
 @Setter
 @Getter

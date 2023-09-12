@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
-
+/**
+ * Der AdminService ist ein Spring-Service, der Funktionen zur Verwaltung des Anwendungskontexts bereitstellt.
+ * Er ermöglicht das Neustarten der Anwendung zur Laufzeit.
+ */
 
 @Service
 @AllArgsConstructor
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Service;
 public class AdminService {
     @Autowired
     private ConfigurableApplicationContext context;
-
+    /**
+     * Der Anwendungskontext, der für den Neustart der Anwendung verwendet wird.
+     */
 
     public void restart() {
         Thread thread = new Thread(() -> {

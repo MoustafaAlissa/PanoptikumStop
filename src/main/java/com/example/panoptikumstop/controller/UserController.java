@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * Die Klasse UserController ist ein Spring-Controller, es ist für Test gedacht.
+ */
 @RestController
 @RequestMapping(path = "/api/user")
 public class UserController {

@@ -10,7 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-
+/**
+ * Die Klasse Cookie repräsentiert ein Objekt, das Informationen über Cookies speichert.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

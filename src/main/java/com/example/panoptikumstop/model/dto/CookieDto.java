@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+/**
+ * Die Klasse CookieDto stellt eine Datenübertragungsklasse (DTO) dar.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

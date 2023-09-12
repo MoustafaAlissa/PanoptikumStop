@@ -20,7 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+/**
+ * Die Klasse AuthController ist ein Spring-Controller, der Endpunkte für die Benutzerauthentifizierung und -registrierung bereitstellt.
+ */
 
 @Controller
 @AllArgsConstructor
@@ -28,12 +30,24 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final UserService userService;
-
+    /**
+     * Behandelt den POST-Endpunkt zum Authentifizieren eines Benutzers.
+     *
+     * @param LogInDto Die Anmeldeinformationen des Benutzers.
+     * @return Eine ResponseEntity-Instanz mit dem Authentifizierungsergebnis.
+     * @throws BadCredentialsException Wenn die Anmeldeinformationen ungültig sind.
+     */
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody LogInDto LogInDto) throws BadCredentialsException {
         return ResponseEntity.ok(userService.signIn(LogInDto));
     }
-
+    /**
+     * Behandelt den POST-Endpunkt zur Registrierung eines neuen Benutzers.
+     *
+     * @param userDto Die Benutzerinformationen für die Registrierung.
+     * @return Eine ResponseEntity-Instanz mit dem Registrierungsergebnis.
+     * @throws ConstraintViolationException Wenn die Registrierungseingaben ungültig sind.
+     */
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody UserDto userDto) throws ConstraintViolationException {
@@ -41,6 +55,12 @@ public class AuthController {
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
+    /**
+     * Behandelt den POST-Endpunkt zur Passwordforget eines Benutzers.
+     * @param userDto Die Benutzerinformationen für die Password forget.
+     * @returnEine ResponseEntity-Instanz mit dem Passwordforget.
+     * @throws ConstraintViolationException Wenn die email ungültig sind.
+     */
     @RequestMapping(path = "/passwordforget", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> passwordforget(@RequestBody UserDto userDto) throws ConstraintViolationException {
         userService.PasswordForget(userDto);

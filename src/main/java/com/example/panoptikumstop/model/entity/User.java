@@ -8,7 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-
+/**
+ * Die Klasse User repräsentiert ein Objekt, das Informationen über User speichert.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

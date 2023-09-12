@@ -10,14 +10,20 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
+/**
+ * Dieser Service bietet Funktionen zur Verarbeitung von Domains und Datenspenden.
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
 public class DominService {
     @Autowired
     private DominRepo dominRepo;
-
+    /**
+     * Verarbeitet eine Datenspende für eine bestimmte Domain.
+     *
+     * @param dominDto Die Informationen zur Datenspende, einschließlich der Liste von Cookies und der URL der Domain.
+     */
 
     public void Datenspende(DominDto dominDto) {
 
@@ -27,7 +33,12 @@ public class DominService {
         log.info(d.toString());
 
     }
-
+    /**
+     * Sucht nach einer Domain in der Datenbank anhand ihres Namens.
+     *
+     * @param domin Der Name der gesuchten Domain.
+     * @return Die gefundene Domain oder null, wenn keine gefunden wurde.
+     */
 
     public Domin findByDomin(String domin) {
         var a = dominRepo.findByName(domin);
@@ -36,7 +47,12 @@ public class DominService {
         return a;
 
     }
-
+    /**
+     * Extrahiert den Namen der Domain aus einer URL.
+     *
+     * @param url Die URL, aus der der Domain-Name extrahiert werden soll.
+     * @return Der extrahierte Domain-Name oder null, wenn die URL ungültig ist.
+     */
     public String filerDomin(String url) {
         try {
             URL parsedUrl = new URL(url);

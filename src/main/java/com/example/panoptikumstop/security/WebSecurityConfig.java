@@ -15,7 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+/**
+ * Diese Konfigurationsklasse stellt die Sicherheitseinstellungen für die Webanwendung bereit.
+ * und ermöglicht die Konfiguration von Zugriffsrechten, Authentifizierung und Authorisierung über HTTP-Anfragen.
+ *
+ * Die Klasse umfasst die Konfiguration von JWT-Authentifizierung, CORS-Einstellungen, CSRF-Schutz
+ * und die Definition von Zugriffsregeln für verschiedene Endpunkte der Anwendung.
+ */
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity

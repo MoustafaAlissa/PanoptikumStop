@@ -30,6 +30,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Der Service zur Verwaltung von Benutzern und Authentifizierung in der Anwendung.
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -51,12 +54,25 @@ public class UserService {
     private AuthenticationManager authenticationManager;
     private ConfirmationTokenService confirmationTokenService;
 
+    /**
+     * Sucht nach einem Benutzer anhand seiner E-Mail-Adresse.
+     *
+     * @param email Die E-Mail-Adresse des zu suchenden Benutzers.
+     * @return Der gefundene Benutzer.
+     * @throws UserExistException Wenn der Benutzer nicht gefunden werden kann.
+     */
     public User findByEmail(String email) {
         Optional<User> oUser = Optional.ofNullable(userRepo.findByEmail(email).orElseThrow(() -> new UserExistException("Der Benutzer konnte nicht gefunden werden.")));
 
         return oUser.get();
     }
-
+    /**
+     * Meldet einen Benutzer an und gibt ein Authentifizierungstoken zurück.
+     *
+     * @param logInDto Die Anmeldeinformationen des Benutzers.
+     * @return Ein Authentifizierungstoken und Benutzerinformationen.
+     * @throws UserExistException Wenn die Anmeldeinformationen ungültig sind.
+     */
     public AuthResponse signIn(LogInDto logInDto) {
         User user = findByEmail(logInDto.getEmail());
 
@@ -78,6 +94,13 @@ public class UserService {
         return new AuthResponse(token, user.isDatenSpenden(), role);
     }
 
+    /**
+     * Registriert einen neuen Benutzer in der Anwendung.
+     *
+     * @param userDto Die Informationen des neuen Benutzers.
+     * @return Ein Authentifizierungstoken und Benutzerinformationen für den neuen Benutzer.
+     * @throws DuplicatedUserInfoException Wenn die E-Mail-Adresse bereits verwendet wird.
+     */
     public AuthResponse signup(UserDto userDto) {
 
 
@@ -103,7 +126,12 @@ public class UserService {
 
         return new AuthResponse(token, u.isDatenSpenden(), u.getRole());
     }
-
+    /**
+     * Sendet eine E-Mail zur Zurücksetzung des Passworts für einen Benutzer.
+     *
+     * @param userDto Die Informationen des Benutzers, der sein Passwort vergessen hat.
+     * @throws UserExistException Wenn die E-Mail-Adresse des Benutzers nicht gefunden wird.
+     */
     public void PasswordForget(UserDto userDto) {
 
         boolean userExists = userRepo.findByEmail(userDto.getEmail()).isPresent();
@@ -124,7 +152,11 @@ public class UserService {
         log.warn(userDto.getEmail() + "  hat Password vergessen.");
 
     }
-
+    /**
+     * Setzt das Passwort eines Benutzers zurück.
+     *
+     * @param userDto Die Informationen des Benutzers zur Passwortänderung.
+     */
     public void PasswordReset(UserDto userDto) {
         User user = findByEmail(userDto.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));

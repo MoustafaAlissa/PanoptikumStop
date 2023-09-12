@@ -8,7 +8,11 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
+/**
+ * Die Klasse ConfirmationToken repräsentiert ein Bestätigungstoken, das zur Bestätigung der
+ * E-Mail-Adresse eines Benutzers verwendet wird.
+ *
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -45,7 +49,14 @@ public class ConfirmationToken {
             name = "user_ID"
     )
     private User user;
-
+    /**
+     * Konstruktor für die ConfirmationToken-Klasse.
+     *
+     * @param token      Das Bestätigungstoken.
+     * @param createdAt  Das Erstellungsdatum des Tokens.
+     * @param expiresAt  Das Ablaufdatum des Tokens.
+     * @param user       Der Benutzer, dem das Token zugeordnet ist.
+     */
     public ConfirmationToken(String token,
                              LocalDateTime createdAt,
                              LocalDateTime expiresAt,

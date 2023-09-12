@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/**
+ * Das Interface UserRepo definiert Methoden für die Datenbankzugriffe auf die Benutzerentitäten.
+ * Es erweitert das JpaRepository-Interface von Spring Data JPA und bietet Standardfunktionen für die Datenbankmanipulation.
+ */
 @Repository
 public interface CookieRepo extends JpaRepository<Cookie, Long> {
 
