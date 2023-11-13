@@ -23,8 +23,8 @@ public class CookieController {
      * @return Eine ResponseEntity-Instanz mit den gefundenen Cookie-Informationen.
      */
     @GetMapping("/find")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public ResponseEntity<?> findCookie(@RequestParam("name") String name) {
+//    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseEntity<?> findCookie(@RequestParam("name") String name) throws Exception {
         return ResponseEntity.ok(trackingSearchService.findCookie(name));
     }
     /**
@@ -34,7 +34,7 @@ public class CookieController {
      * @return Eine ResponseEntity-Instanz mit den gefundenen Cookie-Informationen.
      */
     @PostMapping("/findAll")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<?> findCookieList(@RequestBody String list) {
 
         return ResponseEntity.ok(trackingSearchService.findCookieList(list));
@@ -46,7 +46,7 @@ public class CookieController {
      * @return Eine ResponseEntity-Instanz mit einer Erfolgsmeldung.
      */
     @GetMapping("/delete")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity deleteCookie(@RequestParam("name") String name) {
         trackingSearchService.deleteCookie(name);
         return ResponseEntity.ok(name + "  Delete methode wurde aufgerufen !!! ");
@@ -61,7 +61,7 @@ public class CookieController {
      */
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+//    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<?> creatCookie(@RequestBody CookieDto cookie, Authentication auth) {
         return ResponseEntity.ok(trackingSearchService.createCookie(cookie));
     }
@@ -72,7 +72,7 @@ public class CookieController {
      * @return Eine ResponseEntity-Instanz mit den aktualisierten Cookie-Informationen.
      */
     @PostMapping("/update")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateCookie(@RequestBody CookieDto cookie) {
         return ResponseEntity.ok(trackingSearchService.updateCookie(cookie));
     }
@@ -82,7 +82,7 @@ public class CookieController {
      * @return Eine ResponseEntity-Instanz mit der Liste der nicht überprüften Tracking-Cookies.
      */
     @GetMapping("/uncheckedList")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity getUncheckedList() {
         return ResponseEntity.ok(trackingSearchService.getTrackingCookies());
     }

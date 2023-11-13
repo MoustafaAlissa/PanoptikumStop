@@ -39,7 +39,7 @@ public class TrackingSearchServiceTest {
     }
 
     @Test
-    void testFindCookie() {
+    void testFindCookie() throws Exception {
         String cookieName = "TestCookie";
         Cookie mockCookie = new Cookie();
         mockCookie.setName(cookieName);

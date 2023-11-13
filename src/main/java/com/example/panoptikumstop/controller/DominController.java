@@ -25,7 +25,7 @@ public class DominController {
      * @return Eine ResponseEntity-Instanz mit einer Bestätigungsmeldung für die Datenspende.
      */
     @PostMapping("/spenden")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<?> Datenspende(@RequestBody DominDto dominDto, @RequestHeader("Authorization") String token) {
 
         if (token != null && token.startsWith("Bearer ")) {
@@ -44,7 +44,7 @@ public class DominController {
      * @return Eine ResponseEntity-Instanz mit den Informationen zur Domäne.
      */
     @GetMapping("/get/{domin}")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<?> domin(@PathVariable String domin) {
         return ResponseEntity.ok(dominService.findByDomin(domin));
 

@@ -25,7 +25,7 @@ public class ApiController {
      * @return Eine ResponseEntity-Instanz mit den gefundenen Cookie-Informationen.
      */
     @GetMapping("/find")
-    public ResponseEntity<?> findCookie(@RequestParam("name") String name) {
+    public ResponseEntity<?> findCookie(@RequestParam("name") String name) throws Exception {
         log.info("Extern plattform");
         return ResponseEntity.ok(trackingSearchService.findCookie(name));
     }
