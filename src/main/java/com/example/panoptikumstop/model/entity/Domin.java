@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 /**
  * Die Klasse Domin repräsentiert ein Objekt, das Informationen über Domin speichert.
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "domin")
 public class Domin extends BaseEntity implements Serializable {
 
 

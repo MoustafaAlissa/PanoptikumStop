@@ -1,12 +1,13 @@
 package com.example.panoptikumstop.model.entity;
 
 
-import com.sun.istack.NotNull;
+
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 /**
  * Die Klasse User repräsentiert ein Objekt, das Informationen über User speichert.
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Builder
 @Entity
 @EqualsAndHashCode
-@Table(name = "\"users\"")
+@Table(name = "users")
 public class User extends BaseEntity implements Serializable {
 
     private String firstname;

@@ -50,7 +50,7 @@ public class AuthController {
      */
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody UserDto userDto) throws ConstraintViolationException {
+    public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody UserDto userDto) {
 
         return ResponseEntity.ok(userService.signup(userDto));
     }
@@ -62,14 +62,14 @@ public class AuthController {
      * @throws ConstraintViolationException Wenn die email ungültig sind.
      */
     @RequestMapping(path = "/passwordforget", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> passwordforget(@RequestBody UserDto userDto) throws ConstraintViolationException {
+    public ResponseEntity<String> passwordforget(@RequestBody UserDto userDto) {
         userService.PasswordForget(userDto);
         return ResponseEntity.ok(String.format("Email wurde gesendet an %s.", userDto.getEmail()));
     }
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token, @RequestParam("mail") String mail, Model model)
-            throws ConstraintViolationException {
+            {
         try {
             userService.confirmToken(token);
             UserDto userDto = new UserDto();
@@ -84,7 +84,7 @@ public class AuthController {
 
     @PostMapping("/resetpassword")
     public String passwordReset(@ModelAttribute UserDto userDto)
-            throws ConstraintViolationException {
+          {
         try {
             userService.PasswordReset(userDto);
             return "ResetPasswrod";
