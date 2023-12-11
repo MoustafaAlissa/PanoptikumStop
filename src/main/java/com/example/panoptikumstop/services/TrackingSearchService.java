@@ -23,10 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +41,7 @@ public class TrackingSearchService {
     private final String AND = "And";
     private final String TEXT = "keine Beschreibung, aber Cookies wurden in Easylist gefunden";
     private final String UNKNOWN = "Unknown";
+    private Map<String, Boolean> cache = new ConcurrentHashMap<>();
     /**
      * Sucht nach einem bestimmten Wort in einer externen Cookie-Liste.
      *
@@ -50,7 +49,9 @@ public class TrackingSearchService {
      * @return true, wenn das Wort in der Liste gefunden wurde; false, wenn nicht.
      */
     public boolean searchWordInFile(String word) {
-
+        if (cache.containsKey(word)) {
+            return cache.get(word);
+        }
         boolean found = false;
 
         try {
@@ -66,6 +67,7 @@ public class TrackingSearchService {
             log.error(e.getMessage());
         }
         log.info("Ergebnis der Suche ist " + found);
+        cache.put(word, found);
         return found;
     }
 
@@ -76,16 +78,16 @@ public class TrackingSearchService {
      * @return Das gefundene Cookie oder ein neues Cookie, wenn es nicht in der Datenbank gefunden wurde.
      */
     public Cookie findCookie(String name) {
-
-        Cookie cookie = cookieRepo.findByName(name);
+        String c = filerString(name);
+        Cookie cookie = cookieRepo.findByName(c);
         if (cookie == null) {
 
 
             if (searchWordInFile(name)) {
-                String c = filerString(name);
+
                 cookie = addFromEsayList(c);
             } else {
-                String c = filerString(name);
+
                 cookie = add(c);
             }
 
@@ -104,7 +106,7 @@ public class TrackingSearchService {
         String list = jsonObject.getString("list");
         String[] parts = list.split("(; )");
         log.info(list);
-        return Arrays.stream(parts).
+        return Arrays.stream(parts).parallel().
                 map(part -> part.replace("\"", "")).
                 map(this::findCookie).filter(Objects::nonNull).
                 collect(Collectors.toList());
